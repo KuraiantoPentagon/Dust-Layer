@@ -12,7 +12,7 @@ create table public.social_media_account (
 
 -- 2. YouTube-specific details
 create table public.youtube_account_details (
-  account_id uuid primary key references public.social_media_account(id) on delete cascade,
+  account_id uuid primary key,
   subscriber_count integer,
   channel_type text,
   verified boolean default false,
@@ -21,7 +21,7 @@ create table public.youtube_account_details (
 
 -- 3. TikTok-specific details
 create table public.tiktok_account_details (
-  account_id uuid primary key references public.social_media_account(id) on delete cascade,
+  account_id uuid primary key,
   follower_count integer,
   is_business boolean default false,
   region text
