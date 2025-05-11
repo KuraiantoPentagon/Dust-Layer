@@ -16,7 +16,7 @@ values (
   now()
 );
 
-insert into public.youtube_account_details (
+insert into public.cgm_youtube_account_details (
   account_id,
   subscriber_count,
   channel_type,

@@ -34,6 +34,6 @@ from public.cgm_social_media_account;
 
 -- Enable RLS for origin table
 alter table public.cgm_social_media_account enable row level security;
-alter table public.youtube_account_details enable row level security;
-alter table public.tiktok_account_details enable row level security;
+alter table public.cgm_youtube_account_details enable row level security;
+alter table public.cgm_tiktok_account_details enable row level security;
 
