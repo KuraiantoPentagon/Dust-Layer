@@ -1,5 +1,5 @@
 -- Insert into social_media_account
-insert into public.social_media_account (
+insert into public.cgm_social_media_account (
   platform,
   account_id,
   account_name,
@@ -24,5 +24,5 @@ insert into public.cgm_youtube_account_details (
   country
 )
 select id, 235, 'Education', true, 'Vietnam'
-from public.social_media_account
+from public.cgm_social_media_account
 where platform = 'YouTube' and account_id = 'UCloVwl2JmKG3IghQmTQHBVw';
