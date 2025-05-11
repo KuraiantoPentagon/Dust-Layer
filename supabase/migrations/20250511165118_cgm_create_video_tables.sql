@@ -15,8 +15,9 @@ create table public.cgm_published_video (
   url text,
   publish_date timestamptz,
   status text not null default 'Published' check (status in ('Scheduled', 'Published', 'Archived')),
+  social_media_account_id uuid not null,
   created_at timestamptz not null default now(),
 
-  unique (platform, platform_video_id),
+  unique (platform, platform_video_id)
 );
 
