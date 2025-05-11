@@ -12,5 +12,5 @@ $$ LANGUAGE plpgsql;
 SELECT cron.schedule(
   'analytics_jobs_every_5_min',
   '*/5 * * * *',
-  $$CALL public.run_analytics_jobs_for_all_accounts();$$
+  $$PERFORM public.run_analytics_jobs_for_all_accounts();$$
 );
