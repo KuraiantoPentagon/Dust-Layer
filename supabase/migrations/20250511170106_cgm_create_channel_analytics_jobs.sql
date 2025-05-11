@@ -1,6 +1,7 @@
 -- Create table for storing channel analytics jobs
 CREATE TABLE public.cgm_channel_analytics_job (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  social_media_account_id UUID NOT NULL,
   scheduled_time TIMESTAMPTZ NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('Pending', 'Running', 'Completed', 'Failed')),
   started_at TIMESTAMPTZ,
