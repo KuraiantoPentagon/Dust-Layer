@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -x
+
+ORG_ID="$1"
+
+# Check if ORG_ID is empty
+if [ -z "$ORG_ID" ]; then
+  echo "Error: ORG_ID is required."
+  exit 1
+fi
+
+npx supabase projects list || npx supabase login
+
+export PROJECT_ID=`npx supabase projects list -o json | jq -r --arg ORG_ID "$ORG_ID" '.[] | select(.organization_id == $ORG_ID) | .id'`
+
+# Get all API keys and loop through them
+npx supabase projects api-keys --project-ref "$PROJECT_ID" -o json | jq -c '.[]' | while read -r key; do
+  api_key=$(echo "$key" | jq -r '.api_key')
+  name=$(echo "$key" | jq -r '.name')
+  echo "Name: $name"
+  echo "API Key: $api_key"
+done
+
+
+echo "https://$PROJECT_ID.supabase.co"
+
