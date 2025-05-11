@@ -17,19 +17,24 @@ npx supabase projects list || npx supabase login
 
 export PROJECT_ID=`npx supabase projects list -o json | jq -r --arg ORG_ID "$ORG_ID" '.[] | select(.organization_id == $ORG_ID) | .id'`
 
-# Get all API keys and loop through them
-npx supabase projects api-keys --project-ref "$PROJECT_ID" -o json | jq -c '.[]' | while read -r key; do
-  api_key=$(echo "$key" | jq -r '.api_key')
-  name=$(echo "$key" | jq -r '.name')
-  echo "Name: $name"
-  echo "API Key: $api_key"
+# Declare associative array to hold all API keys
+declare -A api_keys
 
-  # Create/update secret in Kubernetes
-  kubectl create secret generic supabase-api-keys \
-    --dry-run=client -o yaml \
-    --from-literal="SUPABASE_API_KEY_$name=$api_key" | kubectl apply -f -
+# Populate the associative array
+while IFS= read -r key; do
+  name=$(echo "$key" | jq -r '.name')
+  api_key=$(echo "$key" | jq -r '.api_key')
+  api_keys["SUPABASE_API_KEY_$name"]=$api_key
+done < <(npx supabase projects api-keys --project-ref "$PROJECT_ID" -o json | jq -c '.[]')
+
+# Build the argument list for kubectl
+secret_args=""
+for k in "${!api_keys[@]}"; do
+  secret_args+="--from-literal=$k=${api_keys[$k]} "
 done
 
+# Create or update the secret in Kubernetes
+eval "kubectl create secret generic supabase-api-keys --dry-run=client -o yaml $secret_args" | kubectl apply -f -
 
+# Output project URL
 echo "https://$PROJECT_ID.supabase.co"
-
