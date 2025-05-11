@@ -4,8 +4,11 @@ set -x
 
 ORG_ID="$1"
 
+npx supabase projects list || npx supabase login
+
 # Check if ORG_ID is empty
 if [ -z "$ORG_ID" ]; then
+  npx supabase orgs list
   echo "Error: ORG_ID is required."
   exit 1
 fi
