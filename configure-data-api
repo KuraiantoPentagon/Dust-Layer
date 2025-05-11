@@ -20,6 +20,11 @@ npx supabase projects api-keys --project-ref "$PROJECT_ID" -o json | jq -c '.[]'
   name=$(echo "$key" | jq -r '.name')
   echo "Name: $name"
   echo "API Key: $api_key"
+
+  # Create/update secret in Kubernetes
+  kubectl create secret generic supabase-api-keys \
+    --dry-run=client -o yaml \
+    --from-literal="SUPABASE_API_KEY_$name=$api_key" | kubectl apply -f -
 done
 
 
