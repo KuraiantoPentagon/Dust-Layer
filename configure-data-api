@@ -28,7 +28,7 @@ while IFS= read -r key; do
 done < <(npx supabase projects api-keys --project-ref "$PROJECT_ID" -o json | jq -c '.[]')
 
 # Build the argument list for kubectl
-secret_args=""
+secret_args="--from-literal=SUPABASE_PROJECT_URL=https://$PROJECT_ID.supabase.co "
 for k in "${!api_keys[@]}"; do
   secret_args+="--from-literal=$k=${api_keys[$k]} "
 done
